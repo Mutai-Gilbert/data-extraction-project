@@ -11,10 +11,12 @@ def extract_data_from_word(file_path):
     data = []
     document = Document(file_path)
     
-    # Loop through each paragraph or table in the document to extract data
-    for paragraph in document.paragraphs:
-        if paragraph.text.strip():  # Check if paragraph is not empty
-            data.append({'Content': paragraph.text.strip()})
+    # Loop through each table in the document to extract data
+    for table in document.tables:
+        headers = [cell.text.strip() for cell in table.rows[0].cells]
+        for row in table.rows[1:]:
+            row_data = {headers[i]: cell.text.strip() for i, cell in enumerate(row.cells)}
+            data.append(row_data)
     
     return data
 
